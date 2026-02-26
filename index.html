@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mastering Socratic Prompting — Mind Map</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #f0f4f8;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #1a2b3c;
+    min-height: 100vh;
+    padding-bottom: 60px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    background: linear-gradient(135deg, #0d2b4e 0%, #1a4a7a 60%, #1a6b55 100%);
+    color: #fff;
+    padding: 48px 40px 40px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -80px; right: -80px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.04);
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -60px; left: -60px;
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+  }
+  .eyebrow {
+    display: inline-block;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    padding: 5px 18px;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #a8d8c8;
+    margin-bottom: 20px;
+    font-weight: 500;
+  }
+  .header h1 {
+    font-size: clamp(32px, 5vw, 54px);
+    font-weight: 300;
+    letter-spacing: -0.5px;
+    line-height: 1.1;
+    color: #fff;
+  }
+  .header h1 strong { font-weight: 700; color: #5bc8a8; }
+  .header .subtitle {
+    margin-top: 12px;
+    color: rgba(255,255,255,0.55);
+    font-size: 14px;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── BADGES ── */
+  .badges {
+    display: inline-flex;
+    gap: 16px;
+    margin-top: 28px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    padding: 14px 24px;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .badge { text-align: center; }
+  .badge-score { font-size: 28px; font-weight: 700; line-height: 1; }
+  .badge-label { font-size: 11px; opacity: 0.65; margin-top: 3px; text-transform: uppercase; letter-spacing: 1px; }
+  .badge-divider { width: 1px; height: 40px; background: rgba(255,255,255,0.2); }
+  .arrow-label { font-size: 20px; color: #5bc8a8; font-weight: 700; padding: 0 4px; }
+
+  /* ── SHARED GRID ── */
+  .grid {
+    max-width: 1300px;
+    margin: 40px auto 0;
+    padding: 0 28px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 26px 24px;
+    border: 1px solid #dce4ef;
+    box-shadow: 0 2px 8px rgba(13,43,78,0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(13,43,78,0.12); }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: 14px 14px 0 0;
+  }
+  .card.blue::before   { background: linear-gradient(90deg, #1a4a7a, #2e7bcf); }
+  .card.green::before  { background: linear-gradient(90deg, #1a6b55, #28a87e); }
+  .card.slate::before  { background: linear-gradient(90deg, #3a5068, #5a7a9a); }
+  .card.teal::before   { background: linear-gradient(90deg, #0e7490, #22b8ce); }
+  .card.navy::before   { background: linear-gradient(90deg, #0d2b4e, #1a4a7a); }
+  .card.span2 { grid-column: span 2; }
+  .card.span3 { grid-column: span 3; }
+
+  /* ── CARD TAG ── */
+  .card-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.8px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .tag-blue   { background: #e8f0fb; color: #1a4a7a; }
+  .tag-green  { background: #e6f5ef; color: #1a6b55; }
+  .tag-slate  { background: #eef2f7; color: #3a5068; }
+  .tag-teal   { background: #e0f7fa; color: #0e7490; }
+  .tag-navy   { background: #e8edf4; color: #0d2b4e; }
+
+  .card h3 { font-size: 17px; font-weight: 700; color: #0d2b4e; margin-bottom: 12px; line-height: 1.2; }
+  .card p { font-size: 13px; color: #4a637d; line-height: 1.7; }
+  .card p + p { margin-top: 8px; }
+  .card p strong { color: #0d2b4e; font-weight: 600; }
+
+  /* ── FLOW STEPS ── */
+  .flow { display: flex; flex-direction: column; gap: 9px; margin-top: 14px; }
+  .flow-step { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #4a637d; line-height: 1.5; }
+  .step-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px; color: #fff;
+  }
+  .num-blue  { background: #1a4a7a; }
+  .num-green { background: #1a6b55; }
+
+  /* ── 3-PART STRUCTURE ── */
+  .parts { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+  .part { border-radius: 8px; padding: 11px 14px; border-left: 3px solid; }
+  .part-blue  { background: #f0f5fc; border-color: #2e7bcf; }
+  .part-green { background: #eef8f4; border-color: #28a87e; }
+  .part-slate { background: #f4f6f9; border-color: #5a7a9a; }
+  .part-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .lbl-blue  { color: #1a4a7a; }
+  .lbl-green { color: #1a6b55; }
+  .lbl-slate { color: #3a5068; }
+  .part-quote { font-size: 12.5px; font-style: italic; color: #4a637d; line-height: 1.5; }
+
+  /* 3-part HORIZONTAL layout (used inside span3 card) */
+  .parts-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 14px;
+  }
+  .parts-row .part { margin: 0; }
+
+  /* ── COMPARISON ── */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+  .compare-col { border-radius: 10px; padding: 14px; border: 1px solid; }
+  .col-yes { background: #eef8f4; border-color: #b3e6d6; }
+  .col-no  { background: #f4f6f9; border-color: #cfd9e5; }
+  .compare-label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 9px; }
+  .col-yes .compare-label { color: #1a6b55; }
+  .col-no  .compare-label { color: #3a5068; }
+  .compare-col ul { list-style: none; }
+  .compare-col li { font-size: 12.5px; color: #4a637d; padding: 3px 0; display: flex; align-items: center; gap: 7px; line-height: 1.4; }
+  .dot-yes { color: #28a87e; font-size: 16px; line-height: 1; }
+  .dot-no  { color: #8a9ab0; font-size: 16px; line-height: 1; }
+
+  /* ── STACK BOX ── */
+  .stack-box {
+    background: #f5f8fe;
+    border: 1px solid #c8d8ef;
+    border-radius: 10px;
+    padding: 16px 18px 16px 36px;
+    margin-top: 14px;
+    font-size: 13px;
+    font-style: italic;
+    color: #3a5a8a;
+    line-height: 1.75;
+    position: relative;
+  }
+  .stack-box::before {
+    content: '\201C';
+    font-size: 48px;
+    color: #c8d8ef;
+    position: absolute;
+    top: 4px; left: 10px;
+    line-height: 1;
+    font-style: normal;
+  }
+
+  /* ── CASE STUDY EXAMPLES ── */
+  .example-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 14px; }
+  .ex-block { border-radius: 10px; padding: 14px; border: 1px solid; }
+  .ex-basic    { background: #f7f9fb; border-color: #d0dae6; }
+  .ex-socratic { background: #eef8f4; border-color: #b3e6d6; }
+  .ex-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+  .ex-basic .ex-label    { color: #7a90a4; }
+  .ex-socratic .ex-label { color: #1a6b55; }
+  .ex-text { font-size: 12.5px; font-style: italic; color: #4a637d; line-height: 1.65; }
+  .ex-vs { text-align: center; padding: 6px 0; font-size: 12px; color: #8a9ab0; font-weight: 600; }
+
+  /* ── INSIGHT BOX ── */
+  .insight {
+    background: linear-gradient(135deg, #0d2b4e, #1a4a7a);
+    color: #fff;
+    border-radius: 12px;
+    padding: 20px 22px;
+    margin-top: 14px;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .insight-icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+  .insight-text { font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.85); }
+  .insight-text strong { color: #5bc8a8; font-weight: 600; }
+
+  /* ── THREE STEPS (KEY TAKEAWAY) — horizontal row ── */
+  .three-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-top: 14px;
+  }
+  .step-block { border-radius: 10px; padding: 16px; border: 1px solid; text-align: center; }
+  .step-block .icon  { font-size: 28px; margin-bottom: 10px; }
+  .step-block .slabel { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+  .step-block .sdesc { font-size: 13px; color: #4a637d; line-height: 1.5; }
+  .sb-green { background: #f0f7f4; border-color: #c3e6d8; }
+  .sb-green .slabel { color: #1a6b55; }
+  .sb-blue  { background: #f0f5fc; border-color: #c8d8ef; }
+  .sb-blue  .slabel { color: #1a4a7a; }
+  .sb-slate { background: #eef2f7; border-color: #cfd9e5; }
+  .sb-slate .slabel { color: #3a5068; }
+
+  /* ── SOCRATIC IN PRACTICE SECTION ── */
+  .sip-section {
+    max-width: 1300px;
+    margin: 40px auto 0;
+    padding: 0 28px;
+  }
+  .sip-heading {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 18px;
+    border-bottom: 2px solid #dce4ef;
+  }
+  .sip-heading h2 { font-size: clamp(22px, 3vw, 30px); font-weight: 700; color: #0d2b4e; letter-spacing: -0.3px; }
+  .sip-heading-line { flex: 1; height: 1px; background: #dce4ef; }
+  .sip-eyebrow {
+    display: inline-block;
+    background: #e8f0fb;
+    border: 1px solid #c8d8ef;
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #1a4a7a;
+    white-space: nowrap;
+  }
+
+  /* SIP grid — single column (each example full width) */
+  .sip-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  /* SIP CARDS */
+  .sip-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 26px 24px;
+    border: 1px solid #dce4ef;
+    box-shadow: 0 2px 8px rgba(13,43,78,0.06);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+  }
+  .sip-card:hover { transform: translateY(-4px); box-shadow: 0 12px 28px rgba(13,43,78,0.12); }
+  .sip-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 4px;
+    border-radius: 14px 14px 0 0;
+  }
+  .sip-card.blue::before  { background: linear-gradient(90deg, #1a4a7a, #2e7bcf); }
+  .sip-card.green::before { background: linear-gradient(90deg, #1a6b55, #28a87e); }
+  .sip-card.slate::before { background: linear-gradient(90deg, #3a5068, #5a7a9a); }
+  .sip-card.teal::before  { background: linear-gradient(90deg, #0e7490, #22b8ce); }
+  .sip-card.navy::before  { background: linear-gradient(90deg, #0d2b4e, #1a4a7a); }
+
+  .sip-card h3 { font-size: 17px; font-weight: 700; color: #0d2b4e; margin-bottom: 14px; line-height: 1.2; }
+  .sip-card p  { font-size: 13px; color: #4a637d; line-height: 1.7; }
+  .sip-card p + p { margin-top: 8px; }
+  .sip-card p strong { color: #0d2b4e; font-weight: 600; }
+
+  /* EX NUMBER TAG */
+  .ex-number {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 14px;
+  }
+  .ex-number.blue  { background: #e8f0fb; color: #1a4a7a; }
+  .ex-number.green { background: #e6f5ef; color: #1a6b55; }
+  .ex-number.slate { background: #eef2f7; color: #3a5068; }
+  .ex-number.teal  { background: #e0f7fa; color: #0e7490; }
+  .ex-number.navy  { background: #e8edf4; color: #0d2b4e; }
+
+  /* PROMPT COMPARE BLOCKS */
+  .prompt-compare { display: flex; gap: 14px; margin-top: 14px; }
+  .prompt-block { flex: 1; border-radius: 8px; padding: 12px 14px; border-left: 3px solid; }
+  .prompt-block.instruction { background: #f7f9fb; border-color: #9ab0c8; }
+  .prompt-block.socratic    { background: #eef8f4; border-color: #28a87e; }
+  .prompt-type { font-size: 10px; font-weight: 700; letter-spacing: 1.8px; text-transform: uppercase; margin-bottom: 5px; }
+  .prompt-block.instruction .prompt-type { color: #5a7a9a; }
+  .prompt-block.socratic .prompt-type    { color: #1a6b55; }
+  .prompt-text { font-size: 12.5px; font-style: italic; color: #4a637d; line-height: 1.65; }
+  .prompt-result {
+    margin-top: 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #1a6b55;
+    background: #eef8f4;
+    border-radius: 6px;
+    padding: 7px 12px;
+    border: 1px solid #b3e6d6;
+  }
+
+  /* SIP FLOW */
+  .sip-flow { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+  .sip-flow-step { display: flex; align-items: flex-start; gap: 10px; font-size: 13px; color: #4a637d; line-height: 1.5; }
+  .sip-step-num {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+    color: #fff; background: #1a4a7a;
+  }
+  .sip-note {
+    margin-top: 12px;
+    font-size: 12.5px;
+    font-style: italic;
+    color: #3a5a8a;
+    background: #f0f5fc;
+    border-radius: 8px;
+    padding: 10px 14px;
+    border-left: 3px solid #2e7bcf;
+  }
+
+  /* SIP 3-PART STRUCTURE */
+  .sip-parts { display: flex; flex-direction: column; gap: 10px; margin-top: 14px; }
+  .sip-part { border-radius: 8px; padding: 11px 14px; border-left: 3px solid; }
+  .sip-part.p-blue  { background: #f0f5fc; border-color: #2e7bcf; }
+  .sip-part.p-green { background: #eef8f4; border-color: #28a87e; }
+  .sip-part.p-slate { background: #f4f6f9; border-color: #5a7a9a; }
+  .sip-part-label { font-size: 10px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px; }
+  .sip-part.p-blue  .sip-part-label { color: #1a4a7a; }
+  .sip-part.p-green .sip-part-label { color: #1a6b55; }
+  .sip-part.p-slate .sip-part-label { color: #3a5068; }
+  .sip-part-text { font-size: 12.5px; font-style: italic; color: #4a637d; line-height: 1.5; }
+
+  /* APPLICATION GUIDE inside Example 5 */
+  .app-guide-header {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #0d2b4e;
+    background: #e8edf4;
+    border-radius: 20px;
+    padding: 4px 14px;
+    display: inline-block;
+    margin: 18px 0 14px;
+  }
+  .sip-use-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .sip-use-col { border-radius: 10px; padding: 14px; border: 1px solid; }
+  .sip-use-col.yes { background: #eef8f4; border-color: #b3e6d6; }
+  .sip-use-col.no  { background: #f4f6f9; border-color: #cfd9e5; }
+  .sip-use-label { font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; margin-bottom: 9px; }
+  .sip-use-col.yes .sip-use-label { color: #1a6b55; }
+  .sip-use-col.no  .sip-use-label { color: #3a5068; }
+  .sip-use-col ul { list-style: none; }
+  .sip-use-col li { font-size: 12.5px; color: #4a637d; padding: 3px 0; display: flex; align-items: center; gap: 7px; line-height: 1.4; }
+
+  /* ── FOOTER ── */
+  .footer { max-width: 1300px; margin: 40px auto 0; padding: 0 28px; }
+  .footer-bar {
+    background: #0d2b4e;
+    color: rgba(255,255,255,0.45);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .footer-badge {
+    background: rgba(91,200,168,0.15);
+    color: #5bc8a8;
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 960px) {
+    .grid { grid-template-columns: 1fr 1fr; }
+    .card.span2 { grid-column: span 2; }
+    .card.span3 { grid-column: span 2; }
+    .parts-row  { grid-template-columns: 1fr; }
+    .three-steps { grid-template-columns: repeat(3, 1fr); }
+    .sip-use-grid { grid-template-columns: 1fr 1fr; }
+    .prompt-compare { flex-direction: column; }
+    .example-grid { grid-template-columns: 1fr; }
+  }
+
+  @media (max-width: 680px) {
+    .header { padding: 36px 20px 32px; }
+    .grid { grid-template-columns: 1fr; padding: 0 16px; }
+    .card.span2, .card.span3 { grid-column: span 1; }
+    .compare { grid-template-columns: 1fr; }
+    .three-steps { grid-template-columns: 1fr; }
+    .parts-row { grid-template-columns: 1fr; }
+    .sip-section { padding: 0 16px; }
+    .sip-use-grid { grid-template-columns: 1fr; }
+    .prompt-compare { flex-direction: column; }
+    .example-grid { grid-template-columns: 1fr; }
+    .badges { flex-direction: column; gap: 10px; padding: 14px 16px; }
+    .badge-divider { width: 60px; height: 1px; }
+    .footer { padding: 0 16px; }
+    .footer-bar { flex-direction: column; text-align: center; }
+    .sip-heading { flex-wrap: wrap; gap: 10px; }
+    .sip-heading-line { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════════════ HEADER ════════════════ -->
+<div class="header">
+  <div class="eyebrow">Strategic AI Training Module</div>
+  <h1>Mastering <strong>Socratic Prompting</strong></h1>
+  <div class="subtitle">Moving from Task-Takers to Strategic Partners</div>
+  <div class="badges">
+    <div class="badge">
+      <div class="badge-score" style="color:#e8a87c;">6/10</div>
+      <div class="badge-label">Basic Instruction</div>
+    </div>
+    <div class="arrow-label">&#8594;</div>
+    <div class="badge">
+      <div class="badge-score" style="color:#5bc8a8;">9/10</div>
+      <div class="badge-label">Socratic Method</div>
+    </div>
+    <div class="badge-divider"></div>
+    <div class="badge">
+      <div class="badge-score" style="color:#fff; font-size:17px; padding-top:5px;">Expert-Grade Output</div>
+      <div class="badge-label">Measurable Quality Jump</div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ MIND MAP GRID ════════════════ -->
+<div class="grid">
+
+  <!-- ROW 1: Expert Secret + Why It Works (2 cols each) -->
+  <!-- 1: The Expert Secret -->
+  <div class="card blue">
+    <div class="card-tag tag-blue">&#128161; The Expert Secret</div>
+    <h3>How Experts Use AI Differently</h3>
+    <p><strong>Basic users</strong> give direct commands — treating AI like a simple task-taker.</p>
+    <p><strong>Expert users</strong> ask questions first — treating AI like a high-level consultant or strategic advisor.</p>
+    <div class="insight">
+      <div class="insight-icon">&#128300;</div>
+      <div class="insight-text">This technique is reportedly used by engineers at <strong>OpenAI</strong> and <strong>Anthropic</strong> to extract dramatically better output from the same models.</div>
+    </div>
+  </div>
+
+  <!-- 2: Why It Works -->
+  <div class="card green span2">
+    <div class="card-tag tag-green">&#9889; Why It Works</div>
+    <h3>Activating Reasoning Mode</h3>
+    <p>LLMs are trained on billions of <strong>Chain-of-Thought</strong> reasoning examples. Socratic prompting activates these deeper cognitive pathways.</p>
+    <div class="flow">
+      <div class="flow-step"><div class="step-num num-blue">1</div><span>Deeply analyse requirements</span></div>
+      <div class="flow-step"><div class="step-num num-blue">2</div><span>Consider multiple frameworks</span></div>
+      <div class="flow-step"><div class="step-num num-green">3</div><span>Evaluate trade-offs carefully</span></div>
+      <div class="flow-step"><div class="step-num num-green">4</div><span>Synthesise a nuanced final answer</span></div>
+    </div>
+  </div>
+
+  <!-- 3: Core Structure — FULL WIDTH (span 3) -->
+  <div class="card slate span3">
+    <div class="card-tag tag-slate">&#127959; Core Structure</div>
+    <h3>The 3-Part Socratic Formula</h3>
+    <p>Programme the AI's thinking process with three distinct phases before giving your actual task.</p>
+    <div class="parts-row">
+      <div class="part part-blue">
+        <div class="part-label lbl-blue">Part 1 &#183; Theoretical Question</div>
+        <div class="part-quote">"What makes [output type] effective?"</div>
+      </div>
+      <div class="part part-green">
+        <div class="part-label lbl-green">Part 2 &#183; Framework Question</div>
+        <div class="part-quote">"What principles or frameworks apply to this specific problem?"</div>
+      </div>
+      <div class="part part-slate">
+        <div class="part-label lbl-slate">Part 3 &#183; Application Question</div>
+        <div class="part-quote">"Now apply those insights to [your specific task]."</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4: Case Study — spans 3 (full width, as before) -->
+  <div class="card blue span3">
+    <div class="card-tag tag-blue">&#128203; Case Study &#183; Marketing &amp; Strategy</div>
+    <h3>Seeing the Quality Difference in Practice</h3>
+    <div class="example-grid">
+      <div>
+        <p style="font-size:12px; font-weight:700; color:#1a4a7a; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">Value Proposition</p>
+        <div class="ex-block ex-basic">
+          <div class="ex-label">Basic Approach</div>
+          <div class="ex-text">"Write a value proposition for my AI analytics tool."</div>
+        </div>
+        <div class="ex-vs">&#8595; Socratic Upgrade &#8595;</div>
+        <div class="ex-block ex-socratic">
+          <div class="ex-label">Socratic Approach</div>
+          <div class="ex-text">"What makes a value proposition compelling to B2B buyers? What emotional and logical triggers should it hit? Now apply that framework to an AI analytics tool."</div>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:12px; font-weight:700; color:#1a4a7a; margin-bottom:8px; text-transform:uppercase; letter-spacing:1px;">Content Strategy</p>
+        <div class="ex-block ex-basic">
+          <div class="ex-label">Basic Approach</div>
+          <div class="ex-text">"Create a content calendar for LinkedIn."</div>
+        </div>
+        <div class="ex-vs">&#8595; Socratic Upgrade &#8595;</div>
+        <div class="ex-block ex-socratic">
+          <div class="ex-label">Socratic Approach</div>
+          <div class="ex-text">"What types of LinkedIn content generate the most engagement in B2B SaaS? What frequency avoids fatigue? Now design a 30-day calendar using these principles."</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5: Advanced Technique — spans 3 (full width) -->
+  <div class="card teal span3">
+    <div class="card-tag tag-teal">&#128293; Advanced Technique</div>
+    <h3>Question Stacking — Simulating Expert Thinking</h3>
+    <p>For highly complex problems, <strong>stack multiple questions</strong> to simulate the internal monologue of a top-tier domain expert. The result is not just an answer — it is an answer built by a simulated specialist.</p>
+    <div class="stack-box">
+      "What would a top growth marketer ask before building a funnel? What data would they need? What assumptions would they validate first? Now answer those questions for my SaaS product, then design the funnel."
+    </div>
+  </div>
+
+  <!-- 6: Key Takeaway — full width, steps in ONE ROW -->
+  <div class="card green span3">
+    <div class="card-tag tag-green">&#127919; Key Takeaway</div>
+    <h3>The Core Shift: From Commands to Conversations</h3>
+    <div class="three-steps">
+      <div class="step-block sb-green">
+        <div class="icon">&#128483;</div>
+        <div class="slabel">Step 1 &#183; Ask</div>
+        <div class="sdesc">Ask the AI what makes great output in your domain before giving any task.</div>
+      </div>
+      <div class="step-block sb-blue">
+        <div class="icon">&#129529;</div>
+        <div class="slabel">Step 2 &#183; Frame</div>
+        <div class="sdesc">Ask which frameworks and principles apply to your specific context and constraints.</div>
+      </div>
+      <div class="step-block sb-slate">
+        <div class="icon">&#128640;</div>
+        <div class="slabel">Step 3 &#183; Apply</div>
+        <div class="sdesc">Direct the AI to apply those validated insights to your exact task for expert-grade output.</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end .grid -->
+
+
+<!-- ════════════════ SOCRATIC IN PRACTICE ════════════════ -->
+<div class="sip-section">
+
+  <div class="sip-heading">
+    <div class="sip-eyebrow">Training Reference</div>
+    <h2>Socratic in Practice</h2>
+    <div class="sip-heading-line"></div>
+  </div>
+
+  <div class="sip-grid">
+
+    <!-- Example 1: The Logic Flip -->
+    <div class="sip-card blue">
+      <div class="ex-number blue">Example 1 &nbsp;&#183;&nbsp; The Logic Flip</div>
+      <h3>The Logic Flip</h3>
+      <p>Socratic prompting flips this. Instead of telling the AI what to produce, you ask questions that force it to think through the problem. LLMs are trained on billions of reasoning examples. Questions activate that reasoning mode. Instructions don't.</p>
+      <div class="prompt-compare">
+        <div class="prompt-block instruction">
+          <div class="prompt-type">Instruction Prompt</div>
+          <div class="prompt-text">"Write a value proposition for my AI analytics tool"</div>
+        </div>
+        <div class="prompt-block socratic">
+          <div class="prompt-type">Socratic Prompt</div>
+          <div class="prompt-text">"What makes a value proposition compelling to B2B buyers? What emotional and logical triggers should it hit? Now apply that framework to an AI analytics tool."</div>
+        </div>
+      </div>
+      <div class="prompt-result">&#128161; The AI thinks first, then writes. Output is 10x better.</div>
+    </div>
+
+    <!-- Example 2: The Difference in Processing -->
+    <div class="sip-card green">
+      <div class="ex-number green">Example 2 &nbsp;&#183;&nbsp; The Difference in Processing</div>
+      <h3>The Difference in Processing</h3>
+      <div class="prompt-compare">
+        <div class="prompt-block instruction">
+          <div class="prompt-type">Instruction</div>
+          <div class="prompt-text">"Create a content calendar for LinkedIn"</div>
+        </div>
+        <div class="prompt-block socratic">
+          <div class="prompt-type">Socratic</div>
+          <div class="prompt-text">"What types of LinkedIn content generate the most engagement in B2B SaaS? What posting frequency avoids audience fatigue? How should topics build on each other? Now design a 30-day calendar using these principles."</div>
+        </div>
+      </div>
+      <p style="margin-top:12px;">See the difference? LLMs use chain-of-thought reasoning during training. When you ask questions, you trigger that same reasoning pathway.</p>
+      <p style="margin-top:10px; font-size:12px; color:#3a5068; font-style:italic;">The model:</p>
+      <div class="sip-flow">
+        <div class="sip-flow-step"><div class="sip-step-num">1</div><span>Analyzes the question's requirements.</span></div>
+        <div class="sip-flow-step"><div class="sip-step-num">2</div><span>Considers multiple frameworks.</span></div>
+        <div class="sip-flow-step"><div class="sip-step-num">3</div><span>Evaluates trade-offs.</span></div>
+        <div class="sip-flow-step"><div class="sip-step-num">4</div><span>Synthesize a nuanced answer.</span></div>
+      </div>
+      <div class="sip-note">Instructions skip steps 1-3.</div>
+    </div>
+
+    <!-- Example 3: The 3-Part Structure -->
+    <div class="sip-card slate">
+      <div class="ex-number slate">Example 3 &nbsp;&#183;&nbsp; The 3-Part Structure</div>
+      <h3>The 3-Part Structure</h3>
+      <p>Structure your Socratic prompts in 3 parts:</p>
+      <div class="sip-parts">
+        <div class="sip-part p-blue">
+          <div class="sip-part-label">Part 1 &#183; Theoretical Question</div>
+          <div class="sip-part-text">"What makes [output type] effective?"</div>
+        </div>
+        <div class="sip-part p-green">
+          <div class="sip-part-label">Part 2 &#183; Framework Question</div>
+          <div class="sip-part-text">"What principles or frameworks apply here?"</div>
+        </div>
+        <div class="sip-part p-slate">
+          <div class="sip-part-label">Part 3 &#183; Application Question</div>
+          <div class="sip-part-text">"Now apply those insights to [your specific task]"</div>
+        </div>
+      </div>
+      <div class="sip-note">This forces step-by-step reasoning.</div>
+    </div>
+
+    <!-- Example 4: Strategic Analysis vs. Summarization -->
+    <div class="sip-card teal">
+      <div class="ex-number teal">Example 4 &nbsp;&#183;&nbsp; Strategic Analysis vs. Summarization</div>
+      <h3>Strategic Analysis vs. Summarization</h3>
+      <div class="prompt-compare">
+        <div class="prompt-block instruction">
+          <div class="prompt-type">Instead of saying</div>
+          <div class="prompt-text">"Analyze this customer feedback data"</div>
+        </div>
+        <div class="prompt-block socratic">
+          <div class="prompt-type">Say</div>
+          <div class="prompt-text">"What patterns in customer feedback indicate product-market fit issues? What quantitative and qualitative signals matter most? Now analyze this data through that lens and tell me what's breaking."</div>
+        </div>
+      </div>
+      <div class="prompt-result">&#128202; The AI becomes a strategic analyst, not a data summarizer.</div>
+    </div>
+
+    <!-- Example 5: Advanced Stacking & Use Cases -->
+    <div class="sip-card navy">
+      <div class="ex-number navy">Example 5 &nbsp;&#183;&nbsp; Advanced Stacking &amp; Use Cases</div>
+      <h3>Advanced Stacking &amp; Use Cases</h3>
+      <p>For complex problems, stack questions: <em style="color:#5a8abf;">"What would a top growth marketer ask before building a funnel? What data would they need? What assumptions would they validate first? Now answer those questions for my SaaS product, then design the funnel."</em></p>
+      <p style="margin-top:10px;">You're programming the AI's thinking process.</p>
+
+      <!-- APPLICATION GUIDE header -->
+      <div class="app-guide-header">&#9878;&nbsp; Application Guide</div>
+
+      <!-- Use it when you need FIRST, then overkill -->
+      <div class="sip-use-grid">
+        <div class="sip-use-col yes">
+          <div class="sip-use-label">&#10003; Use it when you need:</div>
+          <ul>
+            <li><span style="color:#28a87e; font-size:16px; line-height:1;">&#8226;</span> Strategic thinking</li>
+            <li><span style="color:#28a87e; font-size:16px; line-height:1;">&#8226;</span> Nuanced analysis</li>
+            <li><span style="color:#28a87e; font-size:16px; line-height:1;">&#8226;</span> Creative problem-solving</li>
+            <li><span style="color:#28a87e; font-size:16px; line-height:1;">&#8226;</span> Multi-step reasoning</li>
+          </ul>
+        </div>
+        <div class="sip-use-col no">
+          <div class="sip-use-label">&#8212; Socratic prompting is overkill for:</div>
+          <ul>
+            <li><span style="color:#8a9ab0; font-size:16px; line-height:1;">&#8226;</span> Simple factual queries</li>
+            <li><span style="color:#8a9ab0; font-size:16px; line-height:1;">&#8226;</span> Data formatting tasks</li>
+            <li><span style="color:#8a9ab0; font-size:16px; line-height:1;">&#8226;</span> Basic code generation</li>
+            <li><span style="color:#8a9ab0; font-size:16px; line-height:1;">&#8226;</span> Quick rewrites</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- end .sip-grid -->
+</div><!-- end .sip-section -->
+
+
+<!-- ════════════════ FOOTER ════════════════ -->
+<div class="footer">
+  <div class="footer-bar">
+    <span>Mastering Socratic Prompting &nbsp;&#183;&nbsp; Strategic AI Training Reference</span>
+    <div class="footer-badge">Brought to you by ChelcamTech</div>
+  </div>
+</div>
+
+</body>
+</html>
